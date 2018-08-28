@@ -2,40 +2,57 @@ var constants = require('../js/constants');
 var BaseDrone = require('../js/basedrone');
 var helper = require('../js/helper');
 var fetch = require("node-fetch");
+var droneobject = require('../js/data');
 
 class Drone extends BaseDrone {
 
-    constructor() {
+    constructor(dronename) {
         super();
-        this._drone = this.drone(this._droneName);
-
+        this._dronename = dronename;
     }
+
     createDrone() {
         fetch(constants.API_URL1).then(r => r.json())
-            .then(d => this.fly(d))
+            .then(d => this.Fly(d))
             .catch(x => console.log(x));
     }
-    fly(d) {
+
+    Fly(d) {
         let data = d;
         let battery = this._battery;
-        let roadGoing = 0;
+        let roadgoing = 0;
+        let x = 0;
+        let y = 0;
 
+        let dronename = helper.dronename();
         let halfbattery = battery / 2;
         let state = true;
 
         let interval = setInterval(function () {
 
-            if (roadGoing > halfbattery && state) {
-                state = false;
-                let randomneighborvisit = helper.randomneighborvisit();
-                helper.neighborvisit(data, randomneighborvisit);
+
+            if (roadgoing < battery) {
+                let xory = helper.randomxory();
+
+                if (xory == 0)
+                    x++;
+                else
+                    y++;
             }
 
-            if (roadGoing > battery)
+            if (roadgoing > halfbattery && state) {
+                state = false;
+                let randomneighborvisit = helper.randomneighborvisit();
+                helper.neighborvisit(data, randomneighborvisit, dronename)
+            }
+
+
+            if (roadgoing > battery)
                 clearInterval(interval);
 
-            roadGoing++;
-            
+            roadgoing++;
+           // console.log("-->" + x + " " + y);
+
         }, constants.DURATION);
 
     }
