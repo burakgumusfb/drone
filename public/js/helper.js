@@ -11,16 +11,6 @@ class helper {
         }
         return _p8() + _p8(true) + _p8(true) + _p8();
     }
-
-    static batteryfinished(drone) {
-        drone.classList.remove("high-battery");
-        drone.classList.add("half-battery");
-        drone.classList.add("low-battery");
-    }
-    static batteryhalf(drone) {
-        drone.classList.remove("high-battery");
-        drone.classList.add("half-battery");
-    }
     static randomneighborvisit() {
         let number = Math.floor(Math.random() * Math.floor(constants.DIRECTION));
         return number;
@@ -31,7 +21,7 @@ class helper {
         return number;
 
     }
-    static neighborvisit(data, neighbordirection, dronename) {
+    static neighborvisit(data, neighbordirection, resp) {
         let direction = null;
         switch (neighbordirection) {
             case 0:
@@ -47,9 +37,14 @@ class helper {
                 direction = data.se;
                 break;
         }
-        fetch(constants.API_URL2 + direction).then(r => r.json()).then(d =>
-            droneobject[dronename] = d.color
-        );
+
+        fetch(constants.API_URL2 + direction)
+            .then(function (r) {
+                return r.json()
+            })
+            .then(function (d) {
+                resp(d.color);
+            });
     }
 }
 

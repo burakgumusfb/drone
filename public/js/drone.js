@@ -1,72 +1,65 @@
 var constants = require('../js/constants');
 var BaseDrone = require('../js/basedrone');
 var helper = require('../js/helper');
-var droneList = new Object();
-// var container = document.getElementById("container");
+var fetch = require("node-fetch");
+var droneobject = require('../js/data');
 
 class Drone extends BaseDrone {
 
-    constructor() {
+    constructor(dronename) {
         super();
-        let drone = this.drone(this._droneName);
+        this._dronename = dronename;
     }
+
     createDrone() {
-        console.log('i');
+        fetch(constants.API_URL1).then(r => r.json())
+            .then(d => this.Fly(d))
+            .catch(x => console.log(x));
     }
 
-
-    beforeFly(data) {
-
-        let direction = this._direction;
+    Fly(d) {
+        let data = d;
         let battery = this._battery;
-        let pixel = 0;
-        console.log(direction + "" + battery + "" + pixel)
-        // this.Fly(data, direction, battery, pixel, drone)
+        let roadgoing = 0;
+        let x = 0;
+        let y = 0;
+        let color = null;
+        let dronename = helper.dronename();
+        let halfbattery = battery / 2;
+        let state = true;
+
+        let interval = setInterval(function () {
+
+
+            if (roadgoing < battery) {
+                let xory = helper.randomxory();
+
+                if (xory == 0)
+                    x++;
+                else
+                    y++;
+            }
+
+            if (roadgoing > halfbattery && state) {
+                state = false;
+                let randomneighborvisit = helper.randomneighborvisit();
+                helper.neighborvisit(data, randomneighborvisit, function (resp) {
+                    color = resp;
+                })
+            }
+
+
+            if (roadgoing > battery) {
+                droneobject[dronename] = color + ";" + x + ";" + y;
+                clearInterval(interval);
+            }
+            roadgoing++;
+        
+
+        }, constants.DURATION);
 
     }
-
-    // Fly(data, direction, battery, pixel, drone) {
-
-    //     let halfbattery = battery / 2;
-    //     let state = true;
-
-    //     let interval = setInterval(function () {
-
-    //         if (pixel > halfbattery && state) {
-    //             state = false;
-    //             helper.batteryhalf(drone);
-    //             let neighbordirection = helper.randomneighborvisit();
-    //             helper.neighborvisit(data, neighbordirection)
-    //             direction = neighbordirection;
-    //         }
-
-    //         if (pixel < battery) {
-
-    //             switch (direction) {
-    //                 case 0:
-    //                     drone.style.top = pixel;
-    //                     break;
-    //                 case 1:
-    //                     drone.style.bottom = pixel;
-    //                     break;
-    //                 case 2:
-    //                     drone.style.left = pixel;
-    //                     break;
-    //                 case 3:
-    //                     drone.style.right = pixel;
-    //                     break;
-    //             }
-    //         }
-    //         else {
-
-    //             helper.batteryfinished(drone);
-    //             clearInterval(interval);
-    //         }
-
-    //         pixel++;
-    //     }, constants.DURATION);
-    // }
-
 
 }
+
 module.exports = Drone;
