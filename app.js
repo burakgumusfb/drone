@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var jimp = require('Jimp');
+var Jimp = require('Jimp');
 var constants = require('./public/js/constants');
 var Drone = require('./public/js/drone');
 var fetch = require('node-fetch');
@@ -26,6 +26,18 @@ app.get('/', function (req, res) {
     var bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
     return parseInt(bbggrr, 16);
   }
+
+  function VBColorToHEX(i) {
+    var hex = (i & 0xFF).toString(16) +
+      ((i >> 8) & 0xFF).toString(16) +
+      ((i >> 16) & 0xFF).toString(16) +
+      ((i >> 24) & 0xFF).toString(16);
+
+    hex += '000000'; // pad result
+    hex = hex.substring(0, 6);
+    return "#" + hex;
+  }
+
   setInterval(function () {
     if (dronecount == Object.keys(droneobject).length) {
 
@@ -33,27 +45,23 @@ app.get('/', function (req, res) {
         let val = droneobject[key];
         var d = val.split(';');
         console.log(d[0] + " ıncı");
-        let image = new jimp(15, 15, function (err, image) {
-          if (err) throw err;
+        let image = new Jimp(15, 15, function (err, image) {
 
-          var c = HEXToVBColor(d[0]);
-          console.log(c);
-          image.setPixelColor(c, 0, 0);
-          image.setPixelColor(c, 1, 0);
-          image.setPixelColor(c, 2, 0);
-          image.setPixelColor(c, 3, 0);
-          image.setPixelColor(c, 4, 0);
-          image.setPixelColor(c, 5, 0);
-          image.setPixelColor(c, 6, 0);
-          image.setPixelColor(c, 7, 0);
-          image.setPixelColor(c, 8, 0);
-          image.setPixelColor(c, 9, 0);
-          image.setPixelColor(c, 10, 0);
-          image.setPixelColor(c, 11, 0);
-          image.setPixelColor(c, 12, 0);
-          image.setPixelColor(c, 13, 0);
-          image.setPixelColor(c, 14, 0);
-          image.setPixelColor(c, 15, 0);
+
+          var l =  Jimp.rgbaToInt(255, 255, 255, 255);
+          var c = VBColorToHEX(0xFF0000FF)
+          console.log(l);
+          image.setPixelColor(0xFF00FF, 0, 0);
+          image.setPixelColor(0xFF00FF, 1, 0);
+          image.setPixelColor(0xFF00FF, 2, 0);
+          image.setPixelColor(0xFF00FF, 3, 0);
+          image.setPixelColor(0xFF00FF, 4, 0);
+          image.setPixelColor(0xFF00FF, 5, 0);
+          image.setPixelColor(0xFF00FF, 6, 0);
+          image.setPixelColor(0xFF00FF, 7, 0);
+          image.setPixelColor(0xFF00FF, 8, 0);
+          image.setPixelColor(0xFF00FF, 9, 0);
+          image.setPixelColor(0xFF00FF, 10, 0);
 
           image.write('dronemap.png', (err) => {
             if (err) throw err;
