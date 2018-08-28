@@ -1,4 +1,5 @@
 var constants = require('../js/constants');
+var fetch = require("node-fetch");
 
 class helper {
     static batteryfinished(drone) {
@@ -36,6 +37,4 @@ class helper {
     }
 }
 
-module.exports = {
-    helper: helper
-}
+module.exports = helper;

@@ -1,7 +1,7 @@
 var constants = require('../js/constants');
 var BaseDrone = require('../js/basedrone');
 var helper = require('../js/helper');
-
+var droneList = new Object();
 // var container = document.getElementById("container");
 
 class Drone extends BaseDrone {
@@ -9,24 +9,21 @@ class Drone extends BaseDrone {
     constructor() {
         super();
         let drone = this.drone(this._droneName);
-        //container.innerHTML += drone;
     }
-     createDrone() {
-         console.log('i');
-      }
-    // createDrone() {
-    //     this._data.then(d => this.beforeFly(d))
-    // }
+    createDrone() {
+        console.log('i');
+    }
 
-    // beforeFly(data) {
 
-    //     let direction = this._direction;
-    //     let battery = this._battery;
-    //     let pixel = 0;
-    //     let drone = document.getElementById(this._droneName);
-    //     this.Fly(data, direction, battery, pixel, drone)
+    beforeFly(data) {
 
-    // }
+        let direction = this._direction;
+        let battery = this._battery;
+        let pixel = 0;
+        console.log(direction + "" + battery + "" + pixel)
+        // this.Fly(data, direction, battery, pixel, drone)
+
+    }
 
     // Fly(data, direction, battery, pixel, drone) {
 

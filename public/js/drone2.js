@@ -1,6 +1,7 @@
 var constants = require('../js/constants');
 var BaseDrone = require('../js/basedrone');
 var helper = require('../js/helper');
+var fetch = require("node-fetch");
 
 class Drone extends BaseDrone {
 
@@ -9,39 +10,36 @@ class Drone extends BaseDrone {
         this._drone = this.drone(this._droneName);
 
     }
-
     createDrone() {
-
-        let direction = this._direction;
-        let battery = this._battery;
-        let pixel = 0;
-        this.Fly(direction, battery, pixel, this._drone)
+        fetch(constants.API_URL1).then(r => r.json())
+            .then(d => this.fly(d))
+            .catch(x => console.log(x));
     }
-
-    Fly(direction, battery, pixel, drone) {
+    fly(d) {
+        let data = d;
+        let battery = this._battery;
+        let roadGoing = 0;
 
         let halfbattery = battery / 2;
         let state = true;
 
         let interval = setInterval(function () {
 
-            if (pixel > halfbattery && state) {
+            if (roadGoing > halfbattery && state) {
                 state = false;
-                let neighbordirection = helper.helper.randomneighborvisit();
-                direction = neighbordirection;
+                let randomneighborvisit = helper.randomneighborvisit();
+                helper.neighborvisit(data, randomneighborvisit);
             }
 
-            if (pixel < battery) {
-
-            }
-            else {
-
+            if (roadGoing > battery)
                 clearInterval(interval);
-            }
 
-            pixel++;
+            roadGoing++;
+            
         }, constants.DURATION);
+
     }
+
 }
 
 module.exports = Drone;

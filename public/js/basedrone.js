@@ -1,13 +1,11 @@
 var constants = require('../js/constants');
-var fetch = require("node-fetch");
+
 class BaseDrone {
 
     constructor() {
 
         this._json = null;
         this._data = null;
-        this._response = null;
-       // this._data = this._response.then(r => r.json()).then(d => console.log(d)).catch(x => console.log(x));
         this._battery = this.battery();
         this._droneName = this.dronename();
         this._direction = this.direction();
