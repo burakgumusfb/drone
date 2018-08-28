@@ -1,0 +1,12 @@
+{
+    "name": "droneproject",
+    "description": "drone project for taze soft",
+    "authors": "Burak Gümüş",
+    "version": "1.0.0",
+    "main": "pathToMain",
+    "dependencies": {
+        "express": "^4.16.3",
+        "jimp": "^0.3.9",
+        "node-fetch": "^2.2.0"
+    }
+}
