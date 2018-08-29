@@ -8,15 +8,13 @@ var fetch = require('node-fetch');
 var droneobject = require('./public/js/data');
 const hexRgb = require('hex-rgb');
 
-let imageData = [
-  [0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF, 0xFF0000FF],
-]
+
 
 
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (req, res) {
-  let dronecount = 1;
+  let dronecount = 50;
 
   for (let index = 0; index < dronecount; index++) {
     let drone = new Drone();
@@ -26,52 +24,35 @@ app.get('/', function (req, res) {
 
 
   let x = setInterval(function () {
+
     if (dronecount == Object.keys(droneobject).length) {
-
-      Object.keys(droneobject).forEach(function (key) {
-
-        let val = droneobject[key];
-        var d = val.split(';');
-
-        var l = hexRgb(d[0]);
-        console.log(l["red"]);
-        let image = new Jimp(1000, 1000, function (err, image) {
-
-          var xx = Jimp.rgbaToInt(l["red"], l["blue"], l["green"], 255);
-          image.setPixelColor(xx, 0, 0);
-
-          image.write('dronemap.png', (err) => {
-            if (err) throw err;
-          });
+      let counter = 0;
+      let image = new Jimp(1000, 1000, function (err, image) {
+        Object.keys(droneobject).forEach(function (key) {
+          counter++;
+          let dronevalue = droneobject[key];
+          let spliteddronevalue = dronevalue.split(';');
+          let rgbcode = hexRgb(spliteddronevalue[0]);
+          console.log(rgbcode);
+          var hexcolor = Jimp.rgbaToInt(rgbcode["red"], rgbcode["blue"], rgbcode["green"], 255);
+          image.setPixelColor(hexcolor, parseInt(spliteddronevalue[1]), parseInt(spliteddronevalue[2]));
+          if (counter == dronecount) {
+            image.write('dronemap.png', (err) => {
+              if (err) throw err;
+            });
+            clearInterval(x);
+          }
         });
+
 
       });
     }
-    clearInterval(x);
-  }, 500)
+
+
+  }, 5000)
 
 
   res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 app.listen(3000);
-
-
-/*  setInterval(function () {
-    let image = new jimp(1000, 1000, function (err, image) {
-      if (err) throw err;
-
-      imageData.forEach((row, y) => {
-        ///console.log(row);
-        row.forEach((color, x) => {
-          // console.log(x + " - > " + y);
-          image.setPixelColor(color, x * 5, y * 2);
-
-        });
-      });
-
-      image.write('test.png', (err) => {
-        if (err) throw err;
-      });
-    });
-  }, 5000);*/

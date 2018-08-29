@@ -40,21 +40,18 @@ class Drone extends BaseDrone {
                     y++;
             }
 
-            if (roadgoing > halfbattery && state) {
-                state = false;
+            if (roadgoing > battery) {
+
                 let randomneighborvisit = helper.randomneighborvisit();
                 helper.neighborvisit(data, randomneighborvisit, function (resp) {
-                    color = resp;
+                    console.log(resp);
+                    droneobject[dronename] = resp + ";" + x + ";" + y;
                 })
-            }
 
-
-            if (roadgoing > battery) {
-                droneobject[dronename] = color + ";" + x + ";" + y;
                 clearInterval(interval);
             }
             roadgoing++;
-        
+
 
         }, constants.DURATION);
 
