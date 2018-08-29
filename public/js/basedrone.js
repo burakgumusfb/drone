@@ -19,15 +19,6 @@ class BaseDrone {
         let number = Math.floor(Math.random() * Math.floor(constants.BATTERY_POWER));
         return number;
     }
-
-    drone(id) {
-        return "<" + "input id=" + id + " type='radio' class='high-battery'" + " />";
-    }
-
-    static lowbattery(drone) {
-        drone.classList.remove("high-battery");
-        drone.classList.add("low-battery");
-    }
 }
 
 module.exports = BaseDrone

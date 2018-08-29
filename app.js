@@ -15,6 +15,7 @@ app.get('/', function (req, res) {
 
 
   removeMap();
+
   let dronecount = 40;
   let i = 0;
   var interval = setInterval(function () {
@@ -43,8 +44,11 @@ app.get('/', function (req, res) {
           let dronevalue = droneobject[key];
           let spliteddronevalue = dronevalue.split(';');
           let rgbcode = hexRgb(spliteddronevalue[0]);
+
           console.log(rgbcode);
+
           var hexcolor = Jimp.rgbaToInt(rgbcode["red"], rgbcode["blue"], rgbcode["green"], 255);
+
           image.setPixelColor(hexcolor, parseInt(spliteddronevalue[1]), parseInt(spliteddronevalue[2]));
           if (counter == dronecount) {
             image.rgba(false)
@@ -69,4 +73,5 @@ function removeMap() {
     fs.unlinkSync(path);
   }
 }
+
 app.listen(3000);

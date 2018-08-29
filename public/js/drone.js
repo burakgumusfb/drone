@@ -23,10 +23,7 @@ class Drone extends BaseDrone {
         let roadgoing = 0;
         let x = 0;
         let y = 0;
-        let color = null;
         let dronename = helper.dronename();
-        let halfbattery = battery / 2;
-        let state = true;
 
         let interval = setInterval(function () {
 
